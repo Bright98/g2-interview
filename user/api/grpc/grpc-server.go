@@ -3,7 +3,7 @@ package grpc
 import (
 	"flag"
 	"fmt"
-	pb "g2/user/api/grpc/proto"
+	pb "g2/proto/user"
 	"g2/user/domain"
 	"google.golang.org/grpc"
 	"log"

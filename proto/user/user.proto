@@ -1,6 +1,6 @@
 syntax = "proto3";
-package myTest;
-option go_package = "g2/user/grpc";
+package UserGrpc;
+option go_package = "g2/proto/grpc";
 
 service UserService {
     rpc InsertUser(User) returns (InsertedIDResponse) {}
