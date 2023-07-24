@@ -3,7 +3,7 @@ package domain
 import (
 	"crypto/sha256"
 	"fmt"
-	pb "g2/user/api/grpc/proto"
+	pb "g2/proto/user"
 	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"os"

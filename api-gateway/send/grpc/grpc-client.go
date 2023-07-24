@@ -1,9 +1,11 @@
 package grpc
 
 import (
+	"g2/api-gateway/domain"
 	pb "g2/proto/user"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"log"
 	"os"
 )
 
@@ -11,12 +13,23 @@ type GrpcClient struct {
 	UserClient pb.UserServiceClient
 }
 
-func NewGrpcClient() (*GrpcClient, error) {
-	grpcClient := &GrpcClient{}
-	var err error
+func NewGrpcClient() *GrpcClient {
+	//load env file
+	err := domain.LoadEnvFile()
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-	grpcClient.UserClient, err = UserGrpcClientConnection()
-	return grpcClient, err
+	grpcClient := &GrpcClient{}
+
+	//user grpc
+	client, err := UserGrpcClientConnection()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	grpcClient.UserClient = client
+
+	return grpcClient
 }
 
 func UserGrpcClientConnection() (pb.UserServiceClient, error) {
