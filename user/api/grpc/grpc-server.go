@@ -3,8 +3,8 @@ package grpc
 import (
 	"flag"
 	"fmt"
+	pb "g2/user/api/grpc/proto"
 	"g2/user/domain"
-	pb "g2/user/recieve/grpc/proto"
 	"google.golang.org/grpc"
 	"log"
 	"net"

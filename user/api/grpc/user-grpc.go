@@ -2,8 +2,8 @@ package grpc
 
 import (
 	"context"
+	pb "g2/user/api/grpc/proto"
 	"g2/user/domain"
-	pb "g2/user/recieve/grpc/proto"
 )
 
 func (s *GrpcServer) InsertUser(ctx context.Context, in *pb.User) (*pb.InsertedIDResponse, error) {
