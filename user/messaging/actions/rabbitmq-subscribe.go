@@ -91,10 +91,10 @@ func RabbitmqListenToActions(handler RabbitHandler) {
 		}
 	}()
 	go func() {
-		err := handler.RemoveUserAction(
+		err := handler.EditUserAction(
 			variables.ExchangeName,
-			variables.RemoveUserQueueName,
-			variables.RemoveUserQueueName,
+			variables.EditUserQueueName,
+			variables.EditUserQueueName,
 			"",
 		)
 		if err != nil {

@@ -33,7 +33,7 @@ const (
 
 // queue / key names
 const (
-	InsertUserQueueName = "user.insert"
-	EditUserQueueName   = "user.dit"
-	RemoveUserQueueName = "user.remove"
+	InsertUserQueueName = "user.action.insert"
+	EditUserQueueName   = "user.action.edit"
+	RemoveUserQueueName = "user.action.remove"
 )
