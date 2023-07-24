@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/google/uuid v1.3.0
 	github.com/joho/godotenv v1.5.1
+	github.com/rabbitmq/amqp091-go v1.8.1
 	go.mongodb.org/mongo-driver v1.12.0
 	google.golang.org/grpc v1.56.2
 	google.golang.org/protobuf v1.31.0

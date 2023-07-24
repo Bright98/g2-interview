@@ -1,12 +1,17 @@
 package main
 
 import (
+	"g2/user/api/grpc"
 	"g2/user/domain"
-	"g2/user/recieve/grpc"
+	"g2/user/messaging/actions"
 	"g2/user/repository"
 	"log"
 	"os"
 	"strconv"
+)
+
+var (
+	rabbitHandler actions.RabbitHandler
 )
 
 func init() {
@@ -20,6 +25,7 @@ func init() {
 	repo := repository.NewRepository()
 	service := domain.NewService(repo)
 	_ = grpc.NewGrpcServer(service)
+	rabbitHandler = actions.NewRabbitHandler(service)
 
 	//get mongo requirements from env file
 	timeout := os.Getenv("MONGO_TIMEOUT")
@@ -47,4 +53,6 @@ func init() {
 }
 
 func main() {
+	//actions
+	actions.RabbitmqListenToActions(rabbitHandler)
 }
