@@ -6,7 +6,7 @@ type domainService struct {
 	Repo RepositoryInterface
 }
 
-func Service(repo RepositoryInterface) *domainService {
+func NewService(repo RepositoryInterface) *domainService {
 	return &domainService{Repo: repo}
 }
 

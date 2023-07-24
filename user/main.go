@@ -2,6 +2,7 @@ package main
 
 import (
 	"g2/user/domain"
+	"g2/user/recieve/grpc"
 	"g2/user/repository"
 	"log"
 	"os"
@@ -15,6 +16,11 @@ func init() {
 		log.Fatalln(err.Error())
 	}
 
+	//handle directory connection
+	repo := repository.NewRepository()
+	service := domain.NewService(repo)
+	_ = grpc.NewGrpcServer(service)
+
 	//get mongo requirements from env file
 	timeout := os.Getenv("MONGO_TIMEOUT")
 	mongoUrl := os.Getenv("MONGO_URL")
@@ -26,6 +32,15 @@ func init() {
 
 	//mongo connection
 	err = repository.MongoConnection(mongoUrl, database, timeoutInt)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	//get grpc requirements from env file
+	port := os.Getenv("PORT")
+
+	//grpc connection
+	err = grpc.GrpcServerConnection(port)
 	if err != nil {
 		log.Fatalln(err)
 	}

@@ -1,0 +1,49 @@
+syntax = "proto3";
+package myTest;
+option go_package = "g2/user/grpc";
+
+service UserService {
+    rpc InsertUser(User) returns (InsertedIDResponse) {}
+    rpc EditUser(User) returns (ErrorResponse) {}
+    rpc RemoveUser(IDRequest) returns (ErrorResponse) {}
+    rpc GetUserByID(IDRequest) returns (UserResponse) {}
+    rpc GetUserList(SkipLimitRequest) returns (UserListResponse) {}
+}
+
+//user
+message User {
+    string id = 1;
+    string name = 2;
+    string email = 3;
+    string password = 4;
+    int32 status = 5;
+}
+
+//request
+message IDRequest {
+    string id = 1;
+}
+message SkipLimitRequest {
+    int32 skip = 1;
+    int32 limit = 2;
+}
+
+//response
+message UserResponse {
+    User user = 1;
+    ErrorResponse error = 2;
+}
+message UserListResponse {
+    repeated User users = 1;
+    ErrorResponse error = 2;
+}
+message InsertedIDResponse {
+    string id = 1;
+    ErrorResponse error = 2;
+}
+
+//error
+message ErrorResponse {
+    string key = 1;
+    string Error = 2;
+}
