@@ -1,6 +1,7 @@
 package main
 
 import (
+	"g2/todo/api/grpc"
 	"g2/todo/domain"
 	"g2/todo/messaging/actions"
 	"g2/todo/repository"

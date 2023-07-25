@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"g2/todo/domain"
 	"g2/todo/variables"
 	"go.mongodb.org/mongo-driver/bson"
@@ -13,6 +14,7 @@ import (
 var (
 	MongoTimeout  time.Duration
 	MongoDatabase *mongo.Database
+	MongoClient   *mongo.Client
 )
 
 // todo list
@@ -39,18 +41,61 @@ func (r Repository) EditTodoListRepository(todoList *domain.TodoLists) *domain.E
 	return nil
 }
 func (r Repository) RemoveTodoListRepository(id string) *domain.Errors {
+	//ctx, cancel := context.WithTimeout(context.Background(), MongoTimeout)
+	//defer cancel()
+	//collection := MongoDatabase.Collection(variables.TodoListCollection)
+	//filter := bson.M{"_id": id, "status": bson.M{"$ne": variables.RemovedStatus}}
+	//update := bson.M{"$set": bson.M{"status": variables.RemovedStatus}}
+	//res, err := collection.UpdateOne(ctx, filter, update)
+	//if err != nil {
+	//	return domain.SetError(variables.CantRemoveErr, err.Error())
+	//}
+	//if res.MatchedCount == 0 {
+	//	return domain.SetError(variables.NotFoundErr, "")
+	//}
+	//return nil
+
 	ctx, cancel := context.WithTimeout(context.Background(), MongoTimeout)
 	defer cancel()
-	collection := MongoDatabase.Collection(variables.TodoListCollection)
-	filter := bson.M{"_id": id, "status": bson.M{"$ne": variables.RemovedStatus}}
-	update := bson.M{"$set": bson.M{"status": variables.RemovedStatus}}
-	res, err := collection.UpdateOne(ctx, filter, update)
+	session, err := MongoClient.StartSession()
 	if err != nil {
-		return domain.SetError(variables.CantRemoveErr, err.Error())
+		return domain.SetError(variables.ServiceUnknownErr, err.Error())
 	}
-	if res.MatchedCount == 0 {
-		return domain.SetError(variables.NotFoundErr, "")
+	if err = session.StartTransaction(); err != nil {
+		return domain.SetError(variables.ServiceUnknownErr, err.Error())
 	}
+	err = mongo.WithSession(ctx, session, func(sc mongo.SessionContext) error {
+		//transaction 1
+		collection := MongoDatabase.Collection(variables.TodoListCollection)
+		filter := bson.M{"_id": id, "status": bson.M{"$ne": variables.RemovedStatus}}
+		update := bson.M{"$set": bson.M{"status": variables.RemovedStatus}}
+		res, err := collection.UpdateOne(ctx, filter, update)
+		if err != nil {
+			return err
+		}
+		if res.MatchedCount == 0 {
+			return errors.New("discount not fount")
+		}
+
+		//transaction 2
+		collection = MongoDatabase.Collection(variables.TodoItemCollection)
+		filter = bson.M{"todo_list_id": id}
+		update = bson.M{"$set": bson.M{"status": variables.RemovedStatus}}
+		res, err = collection.UpdateMany(ctx, filter, update)
+		if err != nil {
+			return err
+		}
+
+		//commit transition
+		if err = session.CommitTransaction(sc); err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return domain.SetError(variables.ServiceUnknownErr, err.Error())
+	}
+	session.EndSession(ctx)
 	return nil
 }
 func (r Repository) GetTodoListByIDRepository(id string) (*domain.TodoLists, *domain.Errors) {

@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"g2/user/domain"
+	"g2/todo/domain"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -34,6 +34,7 @@ func MongoConnection(mongoUrl string, database string, timeout int) error {
 
 	MongoTimeout = time.Duration(timeout) * time.Second
 	MongoDatabase = client.Database(database)
+	MongoClient = client
 
 	return nil
 }

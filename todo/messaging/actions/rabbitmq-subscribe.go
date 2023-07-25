@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"fmt"
 	"g2/todo/domain"
 	"g2/todo/variables"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -11,6 +12,12 @@ var (
 )
 
 type RabbitHandler interface {
+	InsertTodoListAction(address, queueName, bindingKey string) error
+	EditTodoListAction(address, queueName, bindingKey string) error
+	RemoveTodoListAction(address, queueName, bindingKey string) error
+	InsertTodoItemAction(address, queueName, bindingKey string) error
+	EditTodoItemAction(address, queueName, bindingKey string) error
+	RemoveTodoItemAction(address, queueName, bindingKey string) error
 }
 
 type handler struct {
@@ -83,10 +90,43 @@ func (c *handler) CreateChannel(address, queueName, bindingKey string) (*amqp.Ch
 }
 
 func RabbitmqListenToActions(handler RabbitHandler) {
-	//go func() {
-	//	err := handler.InsertUserAction(rabbitAddress, variables.InsertUserQueueName, variables.InsertUserBindingKey)
-	//	if err != nil {
-	//		fmt.Println("rabbit error: ", err.Error())
-	//	}
-	//}()
+	//todo list
+	go func() {
+		err := handler.InsertTodoListAction(rabbitAddress, variables.InsertTodoListQueueName, variables.InsertTodoListBindingKey)
+		if err != nil {
+			fmt.Println("rabbit error: ", err.Error())
+		}
+	}()
+	go func() {
+		err := handler.EditTodoListAction(rabbitAddress, variables.EditTodoListQueueName, variables.EditTodoListBindingKey)
+		if err != nil {
+			fmt.Println("rabbit error: ", err.Error())
+		}
+	}()
+	go func() {
+		err := handler.RemoveTodoListAction(rabbitAddress, variables.RemoveTodoListQueueName, variables.RemoveTodoListBindingKey)
+		if err != nil {
+			fmt.Println("rabbit error: ", err.Error())
+		}
+	}()
+
+	//todo item
+	go func() {
+		err := handler.InsertTodoItemAction(rabbitAddress, variables.InsertTodoItemQueueName, variables.InsertTodoItemBindingKey)
+		if err != nil {
+			fmt.Println("rabbit error: ", err.Error())
+		}
+	}()
+	go func() {
+		err := handler.EditTodoItemAction(rabbitAddress, variables.EditTodoItemQueueName, variables.EditTodoItemBindingKey)
+		if err != nil {
+			fmt.Println("rabbit error: ", err.Error())
+		}
+	}()
+	go func() {
+		err := handler.RemoveTodoItemAction(rabbitAddress, variables.RemoveTodoItemQueueName, variables.RemoveTodoItemBindingKey)
+		if err != nil {
+			fmt.Println("rabbit error: ", err.Error())
+		}
+	}()
 }
