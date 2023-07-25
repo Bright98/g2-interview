@@ -39,7 +39,7 @@ func MapUserToGrpcUser(user *Users) *pb.User {
 	userRes.Id = user.Id
 	userRes.Name = user.Name
 	userRes.Email = user.Email
-	userRes.Password = user.Password
+	userRes.Password = ""
 	userRes.Status = int32(user.Status)
 	return userRes
 }
