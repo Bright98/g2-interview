@@ -2,7 +2,8 @@ package grpc
 
 import (
 	"g2/api-gateway/domain"
-	pb "g2/proto/user"
+	todoProto "g2/proto/todo"
+	userProto "g2/proto/user"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
@@ -10,7 +11,8 @@ import (
 )
 
 type GrpcClient struct {
-	UserClient pb.UserServiceClient
+	UserClient userProto.UserServiceClient
+	TodoClient todoProto.TodoServiceClient
 }
 
 func NewGrpcClient() *GrpcClient {
@@ -23,20 +25,35 @@ func NewGrpcClient() *GrpcClient {
 	grpcClient := &GrpcClient{}
 
 	//user grpc
-	client, err := UserGrpcClientConnection()
+	userClient, err := UserGrpcClientConnection()
 	if err != nil {
 		log.Fatalln(err)
 	}
-	grpcClient.UserClient = client
+	grpcClient.UserClient = userClient
+
+	//todo grpc
+	todoClient, err := TodoGrpcClientConnection()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	grpcClient.TodoClient = todoClient
 
 	return grpcClient
 }
 
-func UserGrpcClientConnection() (pb.UserServiceClient, error) {
+func UserGrpcClientConnection() (userProto.UserServiceClient, error) {
 	conn, err := grpc.Dial(os.Getenv("USER_GRPC_ADDRESS"), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
 	}
-	client := pb.NewUserServiceClient(conn)
+	client := userProto.NewUserServiceClient(conn)
+	return client, nil
+}
+func TodoGrpcClientConnection() (todoProto.TodoServiceClient, error) {
+	conn, err := grpc.Dial(os.Getenv("TODO_GRPC_ADDRESS"), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, err
+	}
+	client := todoProto.NewTodoServiceClient(conn)
 	return client, nil
 }

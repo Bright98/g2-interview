@@ -35,12 +35,27 @@ func init() {
 }
 func main() {
 	//define routes
+
 	//users
 	Gin.GET("/api/user/users/id/:user-id", RestHandler.GetUserByID)
 	Gin.GET("/api/user/users", RestHandler.GetUserList)
 	Gin.POST("/api/user/users", RestHandler.InsertUser)
 	Gin.PUT("/api/user/users/id/:user-id", RestHandler.EditUser)
 	Gin.DELETE("/api/user/users/id/:user-id", RestHandler.RemoveUser)
+
+	//todo list
+	Gin.GET("/api/todo/todo-lists/id/:todo-list-id", RestHandler.GetTodoListByID)
+	Gin.GET("/api/todo/todo-lists", RestHandler.GetTodoListList)
+	Gin.POST("/api/todo/todo-lists", RestHandler.InsertTodoList)
+	Gin.PUT("/api/todo/todo-lists/id/:todo-list-id", RestHandler.EditTodoList)
+	Gin.DELETE("/api/todo/todo-lists/id/:todo-list-id", RestHandler.RemoveTodoList)
+
+	//todo items
+	Gin.GET("/api/todo/todo-items/id/:todo-item-id", RestHandler.GetTodoItemByID)
+	Gin.GET("/api/todo/todo-lists/id/:todo-list-id/todo-items", RestHandler.GetTodoItemList)
+	Gin.POST("/api/todo/todo-items", RestHandler.InsertTodoItem)
+	Gin.PUT("/api/todo/todo-items/id/:todo-item-id", RestHandler.EditTodoItem)
+	Gin.DELETE("/api/todo/todo-items/id/:todo-item-id", RestHandler.RemoveTodoItem)
 
 	//run gin
 	err := Gin.Run(domain.GetServerPort())
