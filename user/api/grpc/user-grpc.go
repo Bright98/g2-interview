@@ -39,7 +39,7 @@ func (s GrpcServer) GetUserByID(ctx context.Context, in *pb.IDRequest) (*pb.User
 	return &pb.UserResponse{Data: domain.MapUserToGrpcUser(user), Error: domain.MapDomainGrpcError(err)}, nil
 }
 func (s GrpcServer) GetUserList(ctx context.Context, in *pb.SkipLimitRequest) (*pb.UserListResponse, error) {
-	users, err := s.domain.GetUserListService()
+	users, err := s.domain.GetUserListService(in.Skip, in.Limit)
 	var usersRes []*pb.User
 	for _, user := range users {
 		usersRes = append(usersRes, domain.MapUserToGrpcUser(&user))

@@ -5,5 +5,5 @@ type ServiceInterface interface {
 	EditUserService(user *Users) *Errors
 	RemoveUserService(id string) *Errors
 	GetUserByIDService(id string) (*Users, *Errors)
-	GetUserListService() ([]Users, *Errors)
+	GetUserListService(skip, limit int64) ([]Users, *Errors)
 }

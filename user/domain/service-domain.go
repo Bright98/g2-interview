@@ -54,7 +54,7 @@ func (d *DomainService) RemoveUserService(id string) *Errors {
 func (d *DomainService) GetUserByIDService(id string) (*Users, *Errors) {
 	return d.Repo.GetUserByIDRepository(id)
 }
-func (d *DomainService) GetUserListService() ([]Users, *Errors) {
-	users, err := d.Repo.GetUserListRepository()
+func (d *DomainService) GetUserListService(skip, limit int64) ([]Users, *Errors) {
+	users, err := d.Repo.GetUserListRepository(skip, limit)
 	return users, err
 }

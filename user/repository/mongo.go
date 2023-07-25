@@ -6,6 +6,7 @@ import (
 	"g2/user/variables"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
 )
 
@@ -63,12 +64,16 @@ func (r Repository) GetUserByIDRepository(id string) (*domain.Users, *domain.Err
 	}
 	return user, nil
 }
-func (r Repository) GetUserListRepository() ([]domain.Users, *domain.Errors) {
+func (r Repository) GetUserListRepository(skip, limit int64) ([]domain.Users, *domain.Errors) {
 	ctx, cancel := context.WithTimeout(context.Background(), MongoTimeout)
 	defer cancel()
 	collection := MongoDatabase.Collection(variables.UserCollection)
 	filter := bson.M{"status": bson.M{"$ne": variables.RemovedStatus}}
-	res, err := collection.Find(ctx, filter)
+	if skip != 0 {
+		skip = (skip - 1) * limit
+	}
+	option := options.FindOptions{Skip: &skip, Limit: &limit}
+	res, err := collection.Find(ctx, filter, &option)
 	if err != nil {
 		return nil, domain.SetError(variables.ServiceUnknownErr, err.Error())
 	}
