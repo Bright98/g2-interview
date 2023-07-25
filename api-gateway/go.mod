@@ -8,6 +8,7 @@ require (
 	g2/proto v0.0.0-00010101000000-000000000000
 	github.com/gin-gonic/gin v1.9.1
 	github.com/joho/godotenv v1.5.1
+	github.com/streadway/amqp v1.1.0
 	go.mongodb.org/mongo-driver v1.12.0
 	google.golang.org/grpc v1.56.2
 )

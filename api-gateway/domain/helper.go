@@ -33,3 +33,6 @@ func GetSkipLimitFromQuery(c *gin.Context) (int64, int64) {
 
 	return _skip, _limit
 }
+func SetError(key string, err string) *Errors {
+	return &Errors{Key: key, Error: err}
+}

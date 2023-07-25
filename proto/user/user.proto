@@ -30,15 +30,15 @@ message SkipLimitRequest {
 
 //response
 message UserResponse {
-    User user = 1;
+    User data = 1;
     ErrorResponse error = 2;
 }
 message UserListResponse {
-    repeated User users = 1;
+    repeated User data = 1;
     ErrorResponse error = 2;
 }
 message InsertedIDResponse {
-    string id = 1;
+    IDRequest data = 1;
     ErrorResponse error = 2;
 }
 

@@ -5,37 +5,41 @@ import (
 	"g2/user/domain"
 	"g2/user/variables"
 	amqp "github.com/rabbitmq/amqp091-go"
-	"os"
 )
 
-type RabbitConsumer struct {
-	amqpConn *amqp.Connection
-}
+var (
+	rabbitAddress string
+)
+
 type RabbitHandler interface {
-	InsertUserAction(exchange, queueName, bindingKey, consumerTag string) error
-	EditUserAction(exchange, queueName, bindingKey, consumerTag string) error
-	RemoveUserAction(exchange, queueName, bindingKey, consumerTag string) error
+	InsertUserAction(address, queueName, bindingKey string) error
+	EditUserAction(address, queueName, bindingKey string) error
+	RemoveUserAction(address, queueName, bindingKey string) error
 }
 
 type handler struct {
-	domain domain.ServiceInterface
+	domain  domain.ServiceInterface
+	address string
 }
 
-func NewRabbitHandler(service domain.ServiceInterface) RabbitHandler {
-	return &handler{domain: service}
+func NewRabbitHandler(address string, service domain.ServiceInterface) RabbitHandler {
+	rabbitAddress = address
+	return &handler{domain: service, address: address}
 }
 
-func (c *handler) CreateChannel(exchangeName, queueName, bindingKey, consumerTag string) (*amqp.Channel, error) {
-	conn, err := amqp.Dial(os.Getenv("RABBITMQ_URL"))
+func (c *handler) CreateChannel(address, queueName, bindingKey string) (*amqp.Channel, error) {
+	conn, err := amqp.Dial(address)
 	if err != nil {
 		return nil, err
 	}
+
 	ch, err := conn.Channel()
 	if err != nil {
 		return nil, err
 	}
+
 	err = ch.ExchangeDeclare(
-		exchangeName,
+		variables.ExchangeName,
 		variables.ExchangeKind,
 		variables.ExchangeDurable,
 		variables.ExchangeAutoDelete,
@@ -46,6 +50,7 @@ func (c *handler) CreateChannel(exchangeName, queueName, bindingKey, consumerTag
 	if err != nil {
 		return nil, err
 	}
+
 	queue, err := ch.QueueDeclare(
 		queueName,
 		variables.QueueDurable,
@@ -57,16 +62,18 @@ func (c *handler) CreateChannel(exchangeName, queueName, bindingKey, consumerTag
 	if err != nil {
 		return nil, err
 	}
+
 	err = ch.QueueBind(
 		queue.Name,
 		bindingKey,
-		exchangeName,
+		variables.ExchangeName,
 		variables.QueueNoWait,
 		nil,
 	)
 	if err != nil {
 		return nil, err
 	}
+
 	err = ch.Qos(
 		variables.PrefetchCount,  // prefetch count
 		variables.PrefetchSize,   // prefetch size
@@ -75,39 +82,25 @@ func (c *handler) CreateChannel(exchangeName, queueName, bindingKey, consumerTag
 	if err != nil {
 		return nil, err
 	}
+
 	return ch, nil
 }
 
 func RabbitmqListenToActions(handler RabbitHandler) {
 	go func() {
-		err := handler.InsertUserAction(
-			variables.ExchangeName,
-			variables.InsertUserQueueName,
-			variables.InsertUserQueueName,
-			"",
-		)
+		err := handler.InsertUserAction(rabbitAddress, variables.InsertUserQueueName, variables.InsertUserBindingKey)
 		if err != nil {
 			fmt.Println("rabbit error: ", err.Error())
 		}
 	}()
 	go func() {
-		err := handler.EditUserAction(
-			variables.ExchangeName,
-			variables.EditUserQueueName,
-			variables.EditUserQueueName,
-			"",
-		)
+		err := handler.EditUserAction(rabbitAddress, variables.EditUserQueueName, variables.EditUserBindingKey)
 		if err != nil {
 			fmt.Println("rabbit error: ", err.Error())
 		}
 	}()
 	go func() {
-		err := handler.RemoveUserAction(
-			variables.ExchangeName,
-			variables.RemoveUserQueueName,
-			variables.RemoveUserQueueName,
-			"",
-		)
+		err := handler.RemoveUserAction(rabbitAddress, variables.RemoveUserQueueName, variables.RemoveUserBindingKey)
 		if err != nil {
 			fmt.Println("rabbit error: ", err.Error())
 		}

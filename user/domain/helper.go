@@ -26,9 +26,15 @@ func GetServerPort() string {
 	return ":" + os.Getenv("PORT")
 }
 func MapDomainGrpcError(err *Errors) *pb.ErrorResponse {
+	if err == nil {
+		return nil
+	}
 	return &pb.ErrorResponse{Key: err.Key, Error: err.Error}
 }
 func MapUserToGrpcUser(user *Users) *pb.User {
+	if user == nil {
+		return nil
+	}
 	userRes := &pb.User{}
 	userRes.Id = user.Id
 	userRes.Name = user.Name

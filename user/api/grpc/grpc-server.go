@@ -18,21 +18,18 @@ type GrpcServer struct {
 func NewGrpcServer(service domain.ServiceInterface) *GrpcServer {
 	return &GrpcServer{domain: service}
 }
-
-func GrpcServerConnection(port string) error {
+func GrpcServerConnection(server *GrpcServer, port string) {
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
 	if err != nil {
-		return err
+		log.Fatalln(err)
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterUserServiceServer(s, &GrpcServer{})
+	pb.RegisterUserServiceServer(s, server)
 
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
-		return err
+		log.Fatalln(err)
 	}
-
-	return nil
 }

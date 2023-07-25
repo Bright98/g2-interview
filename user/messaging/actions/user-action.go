@@ -8,15 +8,15 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func (c *handler) InsertUserAction(exchange, queueName, bindingKey, consumerTag string) error {
-	ch, err := c.CreateChannel(exchange, queueName, bindingKey, consumerTag)
+func (c *handler) InsertUserAction(address, queueName, bindingKey string) error {
+	ch, err := c.CreateChannel(address, queueName, bindingKey)
 	if err != nil {
 		return err
 	}
 	defer ch.Close()
 	deliveries, err := ch.Consume(
 		queueName,
-		consumerTag,
+		variables.ExchangeName,
 		variables.ConsumeAutoAck,
 		variables.ConsumeExclusive,
 		variables.ConsumeNoLocal,
@@ -43,15 +43,15 @@ func (c *handler) InsertUserAction(exchange, queueName, bindingKey, consumerTag 
 	chanErr := <-ch.NotifyClose(make(chan *amqp.Error))
 	return chanErr
 }
-func (c *handler) EditUserAction(exchange, queueName, bindingKey, consumerTag string) error {
-	ch, err := c.CreateChannel(exchange, queueName, bindingKey, consumerTag)
+func (c *handler) EditUserAction(address, queueName, bindingKey string) error {
+	ch, err := c.CreateChannel(address, queueName, bindingKey)
 	if err != nil {
 		return err
 	}
 	defer ch.Close()
 	deliveries, err := ch.Consume(
 		queueName,
-		consumerTag,
+		variables.ExchangeName,
 		variables.ConsumeAutoAck,
 		variables.ConsumeExclusive,
 		variables.ConsumeNoLocal,
@@ -78,8 +78,8 @@ func (c *handler) EditUserAction(exchange, queueName, bindingKey, consumerTag st
 	chanErr := <-ch.NotifyClose(make(chan *amqp.Error))
 	return chanErr
 }
-func (c *handler) RemoveUserAction(exchange, queueName, bindingKey, consumerTag string) error {
-	ch, err := c.CreateChannel(exchange, queueName, bindingKey, consumerTag)
+func (c *handler) RemoveUserAction(address, queueName, bindingKey string) error {
+	ch, err := c.CreateChannel(address, queueName, bindingKey)
 	if err != nil {
 		return err
 	}
@@ -87,7 +87,7 @@ func (c *handler) RemoveUserAction(exchange, queueName, bindingKey, consumerTag 
 
 	deliveries, err := ch.Consume(
 		queueName,
-		consumerTag,
+		variables.ExchangeName,
 		variables.ConsumeAutoAck,
 		variables.ConsumeExclusive,
 		variables.ConsumeNoLocal,

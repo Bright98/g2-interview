@@ -1,6 +1,6 @@
 package variables
 
-// subscriber
+// publisher
 const (
 	ExchangeName       = "rabbit-exchange"
 	ExchangeKind       = "topic"
@@ -27,13 +27,14 @@ const (
 	ConsumeNoWait    = false
 )
 
-// queue / key names
 const (
+	//user actions
 	InsertUserBindingKey = "user.action.insert"
 	EditUserBindingKey   = "user.action.edit"
 	RemoveUserBindingKey = "user.action.remove"
 
-	InsertUserQueueName = "user.action.insert"
-	EditUserQueueName   = "user.action.edit"
-	RemoveUserQueueName = "user.action.remove"
+	//user events
+	InsertUserQueueName = "user.event.insert"
+	EditUserQueueName   = "user.event.edit"
+	RemoveUserQueueName = "user.event.remove"
 )

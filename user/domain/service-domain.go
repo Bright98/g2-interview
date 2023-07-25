@@ -1,17 +1,20 @@
 package domain
 
-import "g2/user/variables"
+import (
+	"fmt"
+	"g2/user/variables"
+)
 
-type domainService struct {
+type DomainService struct {
 	Repo RepositoryInterface
 }
 
-func NewService(repo RepositoryInterface) *domainService {
-	return &domainService{Repo: repo}
+func NewService(repo RepositoryInterface) *DomainService {
+	return &DomainService{Repo: repo}
 }
 
 // users
-func (d domainService) InsertUserService(user *Users) (string, *Errors) {
+func (d *DomainService) InsertUserService(user *Users) (string, *Errors) {
 	//check email not repeated
 	_user, _ := d.Repo.GetUserByEmailRepository(user.Email)
 	if _user != nil {
@@ -22,17 +25,36 @@ func (d domainService) InsertUserService(user *Users) (string, *Errors) {
 	user.Password = HashString(user.Password)
 	user.Status = variables.ActiveStatus
 
-	return user.Id, d.Repo.InsertUserRepository(user)
+	err := d.Repo.InsertUserRepository(user)
+	if err != nil {
+		fmt.Println("error: ", err)
+		return "", err
+	}
+	return user.Id, nil
 }
-func (d domainService) EditUserService(user *Users) *Errors {
-	return d.Repo.EditUserRepository(user)
+func (d *DomainService) EditUserService(user *Users) *Errors {
+	user.Password = HashString(user.Password)
+	user.Status = variables.ActiveStatus
+
+	err := d.Repo.EditUserRepository(user)
+	if err != nil {
+		fmt.Println("error: ", err)
+		return err
+	}
+	return nil
 }
-func (d domainService) RemoveUserService(id string) *Errors {
-	return d.Repo.RemoveUserRepository(id)
+func (d *DomainService) RemoveUserService(id string) *Errors {
+	err := d.Repo.RemoveUserRepository(id)
+	if err != nil {
+		fmt.Println("error: ", err)
+		return err
+	}
+	return nil
 }
-func (d domainService) GetUserByIDService(id string) (*Users, *Errors) {
+func (d *DomainService) GetUserByIDService(id string) (*Users, *Errors) {
 	return d.Repo.GetUserByIDRepository(id)
 }
-func (d domainService) GetUserListService() ([]Users, *Errors) {
-	return d.Repo.GetUserListRepository()
+func (d *DomainService) GetUserListService() ([]Users, *Errors) {
+	users, err := d.Repo.GetUserListRepository()
+	return users, err
 }
