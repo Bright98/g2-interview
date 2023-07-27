@@ -46,3 +46,7 @@ func (s GrpcServer) GetUserList(ctx context.Context, in *pb.SkipLimitRequest) (*
 	}
 	return &pb.UserListResponse{Data: usersRes, Error: domain.MapDomainGrpcError(err)}, nil
 }
+func (s GrpcServer) GetUserIDByLoginInfo(ctx context.Context, in *pb.LoginInfoRequest) (*pb.InsertedIDResponse, error) {
+	userID, err := s.domain.GetUserIDByLoginInfo(in.GetEmail(), in.GetPassword())
+	return &pb.InsertedIDResponse{Data: &pb.IDRequest{Id: userID}, Error: domain.MapDomainGrpcError(err)}, nil
+}

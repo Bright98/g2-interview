@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	UserService_InsertUser_FullMethodName  = "/UserGrpc.UserService/InsertUser"
-	UserService_EditUser_FullMethodName    = "/UserGrpc.UserService/EditUser"
-	UserService_RemoveUser_FullMethodName  = "/UserGrpc.UserService/RemoveUser"
-	UserService_GetUserByID_FullMethodName = "/UserGrpc.UserService/GetUserByID"
-	UserService_GetUserList_FullMethodName = "/UserGrpc.UserService/GetUserList"
+	UserService_InsertUser_FullMethodName           = "/UserGrpc.UserService/InsertUser"
+	UserService_EditUser_FullMethodName             = "/UserGrpc.UserService/EditUser"
+	UserService_RemoveUser_FullMethodName           = "/UserGrpc.UserService/RemoveUser"
+	UserService_GetUserByID_FullMethodName          = "/UserGrpc.UserService/GetUserByID"
+	UserService_GetUserList_FullMethodName          = "/UserGrpc.UserService/GetUserList"
+	UserService_GetUserIDByLoginInfo_FullMethodName = "/UserGrpc.UserService/GetUserIDByLoginInfo"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -35,6 +36,7 @@ type UserServiceClient interface {
 	RemoveUser(ctx context.Context, in *IDRequest, opts ...grpc.CallOption) (*ErrorResponse, error)
 	GetUserByID(ctx context.Context, in *IDRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	GetUserList(ctx context.Context, in *SkipLimitRequest, opts ...grpc.CallOption) (*UserListResponse, error)
+	GetUserIDByLoginInfo(ctx context.Context, in *LoginInfoRequest, opts ...grpc.CallOption) (*InsertedIDResponse, error)
 }
 
 type userServiceClient struct {
@@ -90,6 +92,15 @@ func (c *userServiceClient) GetUserList(ctx context.Context, in *SkipLimitReques
 	return out, nil
 }
 
+func (c *userServiceClient) GetUserIDByLoginInfo(ctx context.Context, in *LoginInfoRequest, opts ...grpc.CallOption) (*InsertedIDResponse, error) {
+	out := new(InsertedIDResponse)
+	err := c.cc.Invoke(ctx, UserService_GetUserIDByLoginInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -99,6 +110,7 @@ type UserServiceServer interface {
 	RemoveUser(context.Context, *IDRequest) (*ErrorResponse, error)
 	GetUserByID(context.Context, *IDRequest) (*UserResponse, error)
 	GetUserList(context.Context, *SkipLimitRequest) (*UserListResponse, error)
+	GetUserIDByLoginInfo(context.Context, *LoginInfoRequest) (*InsertedIDResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -120,6 +132,9 @@ func (UnimplementedUserServiceServer) GetUserByID(context.Context, *IDRequest) (
 }
 func (UnimplementedUserServiceServer) GetUserList(context.Context, *SkipLimitRequest) (*UserListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserList not implemented")
+}
+func (UnimplementedUserServiceServer) GetUserIDByLoginInfo(context.Context, *LoginInfoRequest) (*InsertedIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserIDByLoginInfo not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -224,6 +239,24 @@ func _UserService_GetUserList_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetUserIDByLoginInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUserIDByLoginInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_GetUserIDByLoginInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUserIDByLoginInfo(ctx, req.(*LoginInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -250,6 +283,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserList",
 			Handler:    _UserService_GetUserList_Handler,
+		},
+		{
+			MethodName: "GetUserIDByLoginInfo",
+			Handler:    _UserService_GetUserIDByLoginInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

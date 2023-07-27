@@ -6,4 +6,5 @@ type ServiceInterface interface {
 	RemoveUserService(id string) *Errors
 	GetUserByIDService(id string) (*Users, *Errors)
 	GetUserListService(skip, limit int64) ([]Users, *Errors)
+	GetUserIDByLoginInfo(email, password string) (string, *Errors)
 }

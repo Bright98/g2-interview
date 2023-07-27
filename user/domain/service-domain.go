@@ -58,3 +58,11 @@ func (d *DomainService) GetUserListService(skip, limit int64) ([]Users, *Errors)
 	users, err := d.Repo.GetUserListRepository(skip, limit)
 	return users, err
 }
+func (d *DomainService) GetUserIDByLoginInfo(email, password string) (string, *Errors) {
+	password = HashString(password)
+	user, err := d.Repo.GetUserByEmailPasswordRepository(email, password)
+	if err != nil {
+		return "", err
+	}
+	return user.Id, nil
+}
