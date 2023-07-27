@@ -1,6 +1,7 @@
 package domain
 
 import (
+	idpProto "g2/proto/idp"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"os"
@@ -35,4 +36,13 @@ func GetSkipLimitFromQuery(c *gin.Context) (int64, int64) {
 }
 func SetError(key string, err string) *Errors {
 	return &Errors{Key: key, Error: err}
+}
+func MapIdpGrpcToLoginInfo(info *LoginInfo) *idpProto.LoginInfoRequest {
+	if info == nil {
+		return nil
+	}
+	loginInfo := &idpProto.LoginInfoRequest{}
+	loginInfo.Email = info.Email
+	loginInfo.Password = info.Password
+	return loginInfo
 }

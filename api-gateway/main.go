@@ -57,6 +57,9 @@ func main() {
 	Gin.PUT("/api/todo/todo-items/id/:todo-item-id", RestHandler.EditTodoItem)
 	Gin.DELETE("/api/todo/todo-items/id/:todo-item-id", RestHandler.RemoveTodoItem)
 
+	//auth
+	Gin.POST("/api/login", RestHandler.Login)
+
 	//run gin
 	err := Gin.Run(domain.GetServerPort())
 	if err != nil {

@@ -52,6 +52,19 @@ func (r *RestHandler) EditUser(c *gin.Context) {
 		return
 	}
 
+	//check auth
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	validity, claim := r.CheckAuth(c, ctx)
+	if !validity {
+		return
+	}
+	if claim.UserId != id {
+		_err := domain.SetError(variables.AccessErr, "can't access to another account")
+		c.JSON(http.StatusForbidden, bson.M{"error": _err, "data": nil})
+		return
+	}
+
 	//get request body
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
@@ -98,6 +111,19 @@ func (r *RestHandler) RemoveUser(c *gin.Context) {
 		return
 	}
 
+	//check auth
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	validity, claim := r.CheckAuth(c, ctx)
+	if !validity {
+		return
+	}
+	if claim.UserId != id {
+		_err := domain.SetError(variables.AccessErr, "can't access to another account")
+		c.JSON(http.StatusForbidden, bson.M{"error": _err, "data": nil})
+		return
+	}
+
 	//prepare body for message
 	user := &domain.Users{}
 	user.Id = id
@@ -127,6 +153,17 @@ func (r *RestHandler) GetUserByID(c *gin.Context) {
 	defer cancel()
 
 	id := c.Param("user-id")
+
+	//check auth
+	validity, claim := r.CheckAuth(c, ctx)
+	if !validity {
+		return
+	}
+	if claim.UserId != id {
+		_err := domain.SetError(variables.AccessErr, "can't access to another account")
+		c.JSON(http.StatusForbidden, bson.M{"error": _err, "data": nil})
+		return
+	}
 
 	res, _ := r.Grpc.UserClient.GetUserByID(ctx, &pb.IDRequest{Id: id})
 	c.JSON(http.StatusOK, res)

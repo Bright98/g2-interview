@@ -27,6 +27,12 @@ type TodoItems struct {
 	Status     int8   `json:"status" bson:"status"`
 }
 
+// idp
+type LoginInfo struct {
+	Email    string `json:"email" bson:"email"`
+	Password string `json:"password" bson:"password"`
+}
+
 // error
 type Errors struct {
 	Key   string `json:"key" bson:"key"`

@@ -2,6 +2,8 @@ package grpc
 
 import (
 	"g2/api-gateway/domain"
+	idpProto "g2/proto/idp"
+	ssoProto "g2/proto/sso"
 	todoProto "g2/proto/todo"
 	userProto "g2/proto/user"
 	"google.golang.org/grpc"
@@ -13,6 +15,8 @@ import (
 type GrpcClient struct {
 	UserClient userProto.UserServiceClient
 	TodoClient todoProto.TodoServiceClient
+	IdpClient  idpProto.IdpServiceClient
+	SSOClient  ssoProto.SSOServiceClient
 }
 
 func NewGrpcClient() *GrpcClient {
@@ -38,6 +42,20 @@ func NewGrpcClient() *GrpcClient {
 	}
 	grpcClient.TodoClient = todoClient
 
+	//idp grpc
+	idpClient, err := IdpGrpcClientConnection()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	grpcClient.IdpClient = idpClient
+
+	//sso grpc
+	ssoClient, err := SSOGrpcClientConnection()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	grpcClient.SSOClient = ssoClient
+
 	return grpcClient
 }
 
@@ -55,5 +73,21 @@ func TodoGrpcClientConnection() (todoProto.TodoServiceClient, error) {
 		return nil, err
 	}
 	client := todoProto.NewTodoServiceClient(conn)
+	return client, nil
+}
+func IdpGrpcClientConnection() (idpProto.IdpServiceClient, error) {
+	conn, err := grpc.Dial(os.Getenv("TODO_GRPC_ADDRESS"), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, err
+	}
+	client := idpProto.NewIdpServiceClient(conn)
+	return client, nil
+}
+func SSOGrpcClientConnection() (ssoProto.SSOServiceClient, error) {
+	conn, err := grpc.Dial(os.Getenv("TODO_GRPC_ADDRESS"), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, err
+	}
+	client := ssoProto.NewSSOServiceClient(conn)
 	return client, nil
 }
