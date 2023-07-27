@@ -58,13 +58,4 @@ func main() {
 
 	//grpc connection
 	grpc.GrpcServerConnection(grpcHandler, port)
-
-	//Gin := gin.Default()
-	////define routes
-	//Gin.GET("/api/user/users/id/:user-id/test", restHandler.GetUserByIDTest)
-	//
-	//err := Gin.Run(domain.GetServerPort())
-	//if err != nil {
-	//	log.Fatalln(err.Error())
-	//}
 }
