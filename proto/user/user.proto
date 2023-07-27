@@ -8,7 +8,7 @@ service UserService {
     rpc RemoveUser(IDRequest) returns (ErrorResponse) {}
     rpc GetUserByID(IDRequest) returns (UserResponse) {}
     rpc GetUserList(SkipLimitRequest) returns (UserListResponse) {}
-    rpc GetUserIDByLoginInfo(LoginInfoRequest) returns (InsertedIDResponse) {}
+    rpc GetUserIDByLoginInfo(LoginInfoRequest) returns (TokenResponse) {}
 }
 
 //user
@@ -44,6 +44,10 @@ message UserListResponse {
 }
 message InsertedIDResponse {
     IDRequest data = 1;
+    ErrorResponse error = 2;
+}
+message TokenResponse {
+    string data = 1;
     ErrorResponse error = 2;
 }
 

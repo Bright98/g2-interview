@@ -36,7 +36,7 @@ type UserServiceClient interface {
 	RemoveUser(ctx context.Context, in *IDRequest, opts ...grpc.CallOption) (*ErrorResponse, error)
 	GetUserByID(ctx context.Context, in *IDRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	GetUserList(ctx context.Context, in *SkipLimitRequest, opts ...grpc.CallOption) (*UserListResponse, error)
-	GetUserIDByLoginInfo(ctx context.Context, in *LoginInfoRequest, opts ...grpc.CallOption) (*InsertedIDResponse, error)
+	GetUserIDByLoginInfo(ctx context.Context, in *LoginInfoRequest, opts ...grpc.CallOption) (*TokenResponse, error)
 }
 
 type userServiceClient struct {
@@ -92,8 +92,8 @@ func (c *userServiceClient) GetUserList(ctx context.Context, in *SkipLimitReques
 	return out, nil
 }
 
-func (c *userServiceClient) GetUserIDByLoginInfo(ctx context.Context, in *LoginInfoRequest, opts ...grpc.CallOption) (*InsertedIDResponse, error) {
-	out := new(InsertedIDResponse)
+func (c *userServiceClient) GetUserIDByLoginInfo(ctx context.Context, in *LoginInfoRequest, opts ...grpc.CallOption) (*TokenResponse, error) {
+	out := new(TokenResponse)
 	err := c.cc.Invoke(ctx, UserService_GetUserIDByLoginInfo_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -110,7 +110,7 @@ type UserServiceServer interface {
 	RemoveUser(context.Context, *IDRequest) (*ErrorResponse, error)
 	GetUserByID(context.Context, *IDRequest) (*UserResponse, error)
 	GetUserList(context.Context, *SkipLimitRequest) (*UserListResponse, error)
-	GetUserIDByLoginInfo(context.Context, *LoginInfoRequest) (*InsertedIDResponse, error)
+	GetUserIDByLoginInfo(context.Context, *LoginInfoRequest) (*TokenResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -133,7 +133,7 @@ func (UnimplementedUserServiceServer) GetUserByID(context.Context, *IDRequest) (
 func (UnimplementedUserServiceServer) GetUserList(context.Context, *SkipLimitRequest) (*UserListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserList not implemented")
 }
-func (UnimplementedUserServiceServer) GetUserIDByLoginInfo(context.Context, *LoginInfoRequest) (*InsertedIDResponse, error) {
+func (UnimplementedUserServiceServer) GetUserIDByLoginInfo(context.Context, *LoginInfoRequest) (*TokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserIDByLoginInfo not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}

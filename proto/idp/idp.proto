@@ -1,0 +1,26 @@
+syntax = "proto3";
+package SSOGrpc;
+option go_package = "g2/proto/grpc";
+
+service IdpService {
+  rpc Login(LoginInfoRequest) returns (TokenResponse) {}
+}
+
+//request
+message LoginInfoRequest {
+  string email = 1;
+  string password = 2;
+}
+
+
+//response
+message TokenResponse {
+  string data = 1;
+  ErrorResponse error = 2;
+}
+
+//error
+message ErrorResponse {
+  string key = 1;
+  string Error = 2;
+}
