@@ -76,7 +76,7 @@ func TodoGrpcClientConnection() (todoProto.TodoServiceClient, error) {
 	return client, nil
 }
 func IdpGrpcClientConnection() (idpProto.IdpServiceClient, error) {
-	conn, err := grpc.Dial(os.Getenv("TODO_GRPC_ADDRESS"), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(os.Getenv("IDP_GRPC_ADDRESS"), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +84,7 @@ func IdpGrpcClientConnection() (idpProto.IdpServiceClient, error) {
 	return client, nil
 }
 func SSOGrpcClientConnection() (ssoProto.SSOServiceClient, error) {
-	conn, err := grpc.Dial(os.Getenv("TODO_GRPC_ADDRESS"), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(os.Getenv("SSO_GRPC_ADDRESS"), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
 	}
