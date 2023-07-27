@@ -1,0 +1,34 @@
+syntax = "proto3";
+package SSOGrpc;
+option go_package = "g2/proto/grpc";
+
+service SSOService {
+    rpc CheckSSOValidation(TokenRequest) returns (SSOValidationResponse) {}
+    rpc InsertSSOToken(TokenRequest) returns (TokenResponse) {}
+}
+
+//sso
+message IdpClaim {
+    string user_id = 1;
+}
+
+//request
+message TokenRequest {
+    string token = 1;
+}
+
+//response
+message SSOValidationResponse {
+    IdpClaim data = 1;
+    ErrorResponse error = 2;
+}
+message TokenResponse {
+    string data = 1;
+    ErrorResponse error = 2;
+}
+
+//error
+message ErrorResponse {
+    string key = 1;
+    string Error = 2;
+}
