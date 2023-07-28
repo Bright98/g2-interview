@@ -1,5 +1,5 @@
 syntax = "proto3";
-package SSOGrpc;
+package IdpGrpc;
 option go_package = "g2/proto/grpc";
 
 service IdpService {
