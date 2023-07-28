@@ -106,7 +106,7 @@ func (c *handler) RemoveTodoListAction(address, queueName, bindingKey string) er
 			if err != nil {
 				fmt.Print(err)
 			}
-			c.domain.RemoveTodoListService(message.Id)
+			c.domain.RemoveTodoListService(message.Id, message.UserID)
 		}()
 		// Acknowledge that we have received the message. it can be removed from the queue
 		msg.Ack(false)

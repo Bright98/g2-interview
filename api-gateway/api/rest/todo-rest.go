@@ -16,6 +16,15 @@ import (
 // todo list
 // commands
 func (r *RestHandler) InsertTodoList(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	//check auth
+	validity, _ := r.CheckAuth(c, ctx)
+	if !validity {
+		return
+	}
+
 	//get request body
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
@@ -46,6 +55,15 @@ func (r *RestHandler) InsertTodoList(c *gin.Context) {
 	c.JSON(http.StatusOK, bson.M{"error": nil, "data": "will be insert"})
 }
 func (r *RestHandler) EditTodoList(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	//check auth
+	validity, claim := r.CheckAuth(c, ctx)
+	if !validity {
+		return
+	}
+
 	id := c.Param("todo-list-id")
 	if id == "" {
 		_err := domain.SetError(variables.InvalidationErr, "id is empty")
@@ -70,6 +88,7 @@ func (r *RestHandler) EditTodoList(c *gin.Context) {
 		return
 	}
 	todoList.Id = id
+	todoList.UserID = claim.GetUserId()
 
 	//ready new todo list for send message
 	newBody, err := json.Marshal(todoList)
@@ -92,6 +111,15 @@ func (r *RestHandler) EditTodoList(c *gin.Context) {
 	c.JSON(http.StatusOK, bson.M{"error": nil, "data": "will be edit"})
 }
 func (r *RestHandler) RemoveTodoList(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	//check auth
+	validity, claim := r.CheckAuth(c, ctx)
+	if !validity {
+		return
+	}
+
 	id := c.Param("todo-list-id")
 	if id == "" {
 		_err := domain.SetError(variables.InvalidationErr, "id is empty")
@@ -102,6 +130,7 @@ func (r *RestHandler) RemoveTodoList(c *gin.Context) {
 	//prepare body for message
 	todoList := &domain.TodoLists{}
 	todoList.Id = id
+	todoList.UserID = claim.GetUserId()
 	body, err := json.Marshal(todoList)
 	if err != nil {
 		_err := domain.SetError(variables.InvalidationErr, "id is empty")
@@ -127,23 +156,46 @@ func (r *RestHandler) GetTodoListByID(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	id := c.Param("todo-list-id")
+	//check auth
+	validity, claim := r.CheckAuth(c, ctx)
+	if !validity {
+		return
+	}
 
-	res, _ := r.Grpc.TodoClient.GetTodoListByID(ctx, &pb.IDRequest{Id: id})
+	id := c.Param("todo-list-id")
+	res, _ := r.Grpc.TodoClient.GetTodoListByID(ctx, &pb.IDRequest{Id: id, UserId: claim.GetUserId()})
 	c.JSON(http.StatusOK, res)
 }
 func (r *RestHandler) GetTodoListList(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
+	//check auth
+	validity, claim := r.CheckAuth(c, ctx)
+	if !validity {
+		return
+	}
+
 	skip, limit := domain.GetSkipLimitFromQuery(c)
-	res, _ := r.Grpc.TodoClient.GetTodoListList(ctx, &pb.SkipLimitRequest{Skip: skip, Limit: limit})
+	res, _ := r.Grpc.TodoClient.GetTodoListList(
+		ctx,
+		&pb.SkipLimitRequest{Skip: skip, Limit: limit, UserId: claim.GetUserId()},
+	)
 	c.JSON(http.StatusOK, res)
 }
 
 // todo items
 // commands
 func (r *RestHandler) InsertTodoItem(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	//check auth
+	validity, _ := r.CheckAuth(c, ctx)
+	if !validity {
+		return
+	}
+
 	//get request body
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
@@ -174,6 +226,15 @@ func (r *RestHandler) InsertTodoItem(c *gin.Context) {
 	c.JSON(http.StatusOK, bson.M{"error": nil, "data": "will be insert"})
 }
 func (r *RestHandler) EditTodoItem(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	//check auth
+	validity, claim := r.CheckAuth(c, ctx)
+	if !validity {
+		return
+	}
+
 	id := c.Param("todo-item-id")
 	if id == "" {
 		_err := domain.SetError(variables.InvalidationErr, "id is empty")
@@ -198,6 +259,7 @@ func (r *RestHandler) EditTodoItem(c *gin.Context) {
 		return
 	}
 	todoItem.Id = id
+	todoItem.UserID = claim.GetUserId()
 
 	//ready new todo item for send message
 	newBody, err := json.Marshal(todoItem)
@@ -220,6 +282,15 @@ func (r *RestHandler) EditTodoItem(c *gin.Context) {
 	c.JSON(http.StatusOK, bson.M{"error": nil, "data": "will be edit"})
 }
 func (r *RestHandler) RemoveTodoItem(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	//check auth
+	validity, claim := r.CheckAuth(c, ctx)
+	if !validity {
+		return
+	}
+
 	id := c.Param("todo-item-id")
 	if id == "" {
 		_err := domain.SetError(variables.InvalidationErr, "id is empty")
@@ -230,6 +301,7 @@ func (r *RestHandler) RemoveTodoItem(c *gin.Context) {
 	//prepare body for message
 	todoItem := &domain.TodoItems{}
 	todoItem.Id = id
+	todoItem.UserID = claim.GetUserId()
 	body, err := json.Marshal(todoItem)
 	if err != nil {
 		_err := domain.SetError(variables.InvalidationErr, "id is empty")
@@ -255,16 +327,27 @@ func (r *RestHandler) GetTodoItemByID(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	id := c.Param("todo-item-id")
+	//check auth
+	validity, claim := r.CheckAuth(c, ctx)
+	if !validity {
+		return
+	}
 
-	res, _ := r.Grpc.TodoClient.GetTodoItemByID(ctx, &pb.IDRequest{Id: id})
+	id := c.Param("todo-item-id")
+	res, _ := r.Grpc.TodoClient.GetTodoItemByID(ctx, &pb.IDRequest{Id: id, UserId: claim.GetUserId()})
 	c.JSON(http.StatusOK, res)
 }
 func (r *RestHandler) GetTodoItemList(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
+	//check auth
+	validity, claim := r.CheckAuth(c, ctx)
+	if !validity {
+		return
+	}
+
 	id := c.Param("todo-item-id")
-	res, _ := r.Grpc.TodoClient.GetTodoItemList(ctx, &pb.IDRequest{Id: id})
+	res, _ := r.Grpc.TodoClient.GetTodoItemList(ctx, &pb.IDRequest{Id: id, UserId: claim.GetUserId()})
 	c.JSON(http.StatusOK, res)
 }
