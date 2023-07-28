@@ -51,3 +51,11 @@ func MapTodoItemToGrpcTodoItem(todoItem *TodoItems) *pb.TodoItem {
 	todoItemRes.Status = int32(todoItem.Status)
 	return todoItemRes
 }
+func (d *DomainService) InsertErrorLogFunction(err *Errors, collection, desc string) {
+	log := &ErrorLogs{}
+	log.Key = err.Key
+	log.Error = err.Error
+	log.Collection = collection
+	log.Description = desc
+	d.Repo.InsertErrorLogRepository(log)
+}

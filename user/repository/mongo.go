@@ -115,3 +115,15 @@ func (r Repository) GetUserByEmailRepository(email string) (*domain.Users, *doma
 	}
 	return user, nil
 }
+
+// error log
+func (r Repository) InsertErrorLogRepository(errorLog *domain.ErrorLogs) *domain.Errors {
+	ctx, cancel := context.WithTimeout(context.Background(), MongoTimeout)
+	defer cancel()
+	collection := MongoDatabase.Collection(variables.ErrorLogCollection)
+	_, err := collection.InsertOne(ctx, errorLog)
+	if err != nil {
+		return domain.SetError(variables.CantInsertErr, err.Error())
+	}
+	return nil
+}

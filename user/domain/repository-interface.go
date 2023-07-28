@@ -8,4 +8,5 @@ type RepositoryInterface interface {
 	GetUserListRepository(skip, limit int64) ([]Users, *Errors)
 	GetUserByEmailPasswordRepository(email, password string) (*Users, *Errors)
 	GetUserByEmailRepository(email string) (*Users, *Errors)
+	InsertErrorLogRepository(errorLog *ErrorLogs) *Errors
 }

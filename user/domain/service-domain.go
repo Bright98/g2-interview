@@ -28,6 +28,8 @@ func (d *DomainService) InsertUserService(user *Users) (string, *Errors) {
 	err := d.Repo.InsertUserRepository(user)
 	if err != nil {
 		fmt.Println("error: ", err)
+		d.InsertErrorLogFunction(err, variables.UserCollection, "insert error")
+
 		return "", err
 	}
 	return user.Id, nil
@@ -39,6 +41,7 @@ func (d *DomainService) EditUserService(user *Users) *Errors {
 	err := d.Repo.EditUserRepository(user)
 	if err != nil {
 		fmt.Println("error: ", err)
+		d.InsertErrorLogFunction(err, variables.UserCollection, "edit error")
 		return err
 	}
 	return nil
@@ -47,6 +50,7 @@ func (d *DomainService) RemoveUserService(id string) *Errors {
 	err := d.Repo.RemoveUserRepository(id)
 	if err != nil {
 		fmt.Println("error: ", err)
+		d.InsertErrorLogFunction(err, variables.UserCollection, "remove error")
 		return err
 	}
 	return nil

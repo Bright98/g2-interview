@@ -20,7 +20,7 @@ func (r *RestHandler) InsertTodoList(c *gin.Context) {
 	defer cancel()
 
 	//check auth
-	validity, _ := r.CheckAuth(c, ctx)
+	validity, claim := r.CheckAuth(c, ctx)
 	if !validity {
 		return
 	}
@@ -41,9 +41,18 @@ func (r *RestHandler) InsertTodoList(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, bson.M{"error": _err, "data": nil})
 		return
 	}
+	todoList.UserID = claim.UserId
+
+	//ready new todo list for send message
+	newBody, err := json.Marshal(todoList)
+	if err != nil {
+		_err := domain.SetError(variables.InvalidationErr, err.Error())
+		c.JSON(http.StatusBadRequest, bson.M{"error": _err, "data": nil})
+		return
+	}
 
 	err = r.Msg.PublishMessage(
-		body,
+		newBody,
 		variables.InsertTodoListQueueName,
 		variables.InsertTodoListBindingKey,
 	)
@@ -191,7 +200,7 @@ func (r *RestHandler) InsertTodoItem(c *gin.Context) {
 	defer cancel()
 
 	//check auth
-	validity, _ := r.CheckAuth(c, ctx)
+	validity, claim := r.CheckAuth(c, ctx)
 	if !validity {
 		return
 	}
@@ -212,9 +221,18 @@ func (r *RestHandler) InsertTodoItem(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, bson.M{"error": _err, "data": nil})
 		return
 	}
+	todoItem.UserID = claim.UserId
+
+	//ready new todo list for send message
+	newBody, err := json.Marshal(todoItem)
+	if err != nil {
+		_err := domain.SetError(variables.InvalidationErr, err.Error())
+		c.JSON(http.StatusBadRequest, bson.M{"error": _err, "data": nil})
+		return
+	}
 
 	err = r.Msg.PublishMessage(
-		body,
+		newBody,
 		variables.InsertTodoItemQueueName,
 		variables.InsertTodoItemBindingKey,
 	)
@@ -347,7 +365,7 @@ func (r *RestHandler) GetTodoItemList(c *gin.Context) {
 		return
 	}
 
-	id := c.Param("todo-item-id")
+	id := c.Param("todo-list-id")
 	res, _ := r.Grpc.TodoClient.GetTodoItemList(ctx, &pb.IDRequest{Id: id, UserId: claim.GetUserId()})
 	c.JSON(http.StatusOK, res)
 }

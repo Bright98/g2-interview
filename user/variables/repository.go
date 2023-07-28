@@ -2,7 +2,8 @@ package variables
 
 // collections
 const (
-	UserCollection = "users"
+	ErrorLogCollection = "error_logs"
+	UserCollection     = "users"
 )
 
 // status

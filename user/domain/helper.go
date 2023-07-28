@@ -43,3 +43,11 @@ func MapUserToGrpcUser(user *Users) *pb.User {
 	userRes.Status = int32(user.Status)
 	return userRes
 }
+func (d *DomainService) InsertErrorLogFunction(err *Errors, collection, desc string) {
+	log := &ErrorLogs{}
+	log.Key = err.Key
+	log.Error = err.Error
+	log.Collection = collection
+	log.Description = desc
+	d.Repo.InsertErrorLogRepository(log)
+}

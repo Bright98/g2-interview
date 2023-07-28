@@ -34,9 +34,12 @@ func (r Repository) EditTodoListRepository(todoList *domain.TodoLists) *domain.E
 	collection := MongoDatabase.Collection(variables.TodoListCollection)
 	filter := bson.M{"_id": todoList.Id, "user_id": todoList.UserID, "status": bson.M{"$ne": variables.RemovedStatus}}
 	update := bson.M{"$set": todoList}
-	_, err := collection.UpdateOne(ctx, filter, update)
+	res, err := collection.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return domain.SetError(variables.CantInsertErr, err.Error())
+	}
+	if res.MatchedCount == 0 {
+		return domain.SetError(variables.NotFoundErr, "")
 	}
 	return nil
 }
@@ -67,7 +70,7 @@ func (r Repository) RemoveTodoListRepository(id string, userID string) *domain.E
 		collection = MongoDatabase.Collection(variables.TodoItemCollection)
 		filter = bson.M{"todo_list_id": id, "user_id": userID}
 		update = bson.M{"$set": bson.M{"status": variables.RemovedStatus}}
-		res, err = collection.UpdateMany(ctx, filter, update)
+		_, err = collection.UpdateMany(ctx, filter, update)
 		if err != nil {
 			return err
 		}
@@ -141,9 +144,12 @@ func (r Repository) EditTodoItemRepository(todoItem *domain.TodoItems) *domain.E
 	collection := MongoDatabase.Collection(variables.TodoItemCollection)
 	filter := bson.M{"_id": todoItem.Id, "user_id": todoItem.UserID, "status": bson.M{"$ne": variables.RemovedStatus}}
 	update := bson.M{"$set": todoItem}
-	_, err := collection.UpdateOne(ctx, filter, update)
+	res, err := collection.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return domain.SetError(variables.CantInsertErr, err.Error())
+	}
+	if res.MatchedCount == 0 {
+		return domain.SetError(variables.NotFoundErr, "")
 	}
 	return nil
 }
@@ -179,7 +185,8 @@ func (r Repository) GetTodoItemListRepository(todoListID string, userID string) 
 	defer cancel()
 	collection := MongoDatabase.Collection(variables.TodoItemCollection)
 	filter := bson.M{"todo_list_id": todoListID, "user_id": userID, "status": bson.M{"$ne": variables.RemovedStatus}}
-	res, err := collection.Find(ctx, filter)
+	option := options.FindOptions{Sort: bson.M{"priority": 1}}
+	res, err := collection.Find(ctx, filter, &option)
 	if err != nil {
 		return nil, domain.SetError(variables.ServiceUnknownErr, err.Error())
 	}
@@ -196,4 +203,16 @@ func (r Repository) GetTodoItemListRepository(todoListID string, userID string) 
 	}
 
 	return result, nil
+}
+
+// error log
+func (r Repository) InsertErrorLogRepository(errorLog *domain.ErrorLogs) *domain.Errors {
+	ctx, cancel := context.WithTimeout(context.Background(), MongoTimeout)
+	defer cancel()
+	collection := MongoDatabase.Collection(variables.ErrorLogCollection)
+	_, err := collection.InsertOne(ctx, errorLog)
+	if err != nil {
+		return domain.SetError(variables.CantInsertErr, err.Error())
+	}
+	return nil
 }

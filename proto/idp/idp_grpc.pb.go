@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	IdpService_Login_FullMethodName = "/SSOGrpc.IdpService/Login"
+	IdpService_Login_FullMethodName = "/IdpGrpc.IdpService/Login"
 )
 
 // IdpServiceClient is the client API for IdpService service.
@@ -96,7 +96,7 @@ func _IdpService_Login_Handler(srv interface{}, ctx context.Context, dec func(in
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var IdpService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "SSOGrpc.IdpService",
+	ServiceName: "IdpGrpc.IdpService",
 	HandlerType: (*IdpServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

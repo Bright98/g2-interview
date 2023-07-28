@@ -13,3 +13,9 @@ type Errors struct {
 	Key   string `json:"key" bson:"key"`
 	Error string `json:"error" bson:"error"`
 }
+type ErrorLogs struct {
+	Key         string `json:"key" bson:"key"`
+	Error       string `json:"error" bson:"error"`
+	Description string `json:"description" bson:"description"`
+	Collection  string `json:"collection" bson:"collection"`
+}

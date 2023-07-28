@@ -11,4 +11,5 @@ type RepositoryInterface interface {
 	RemoveTodoItemRepository(id, userID string) *Errors
 	GetTodoItemByIDRepository(id, userID string) (*TodoItems, *Errors)
 	GetTodoItemListRepository(todoListID, userID string) ([]TodoItems, *Errors)
+	InsertErrorLogRepository(errorLog *ErrorLogs) *Errors
 }
