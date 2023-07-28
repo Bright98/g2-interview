@@ -1,0 +1,571 @@
+{
+	"info": {
+		"_postman_id": "38a341fe-ec1e-41e8-a097-f78a5961f416",
+		"name": "G2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27597198"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "get user by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "68e423d7-2d18-11ee-9fc2-a08cfd743dba",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9000/api/user/users/id/:user-id",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"user",
+								"users",
+								"id",
+								":user-id"
+							],
+							"variable": [
+								{
+									"key": "user-id",
+									"value": "7b0e8a99-2d16-11ee-ae86-a08cfd743dba"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9000/api/user/users",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"user",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "inset user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"user name\",\r\n    \"email\": \"user.mail@gmail.com\",\r\n    \"password\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/api/user/users",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"user",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit user",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "68e423d7-2d18-11ee-9fc2-a08cfd743dba",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"user name\",\r\n    \"email\": \"user@gmail.com\",\r\n    \"password\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/api/user/users/id/:user-id",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"user",
+								"users",
+								"id",
+								":user-id"
+							],
+							"variable": [
+								{
+									"key": "user-id",
+									"value": "7b0e8a99-2d16-11ee-ae86-a08cfd743dba"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove user",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "68e423d7-2d18-11ee-9fc2-a08cfd743dba",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9000/api/user/users/id/:user-id",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"user",
+								"users",
+								"id",
+								":user-id"
+							],
+							"variable": [
+								{
+									"key": "user-id",
+									"value": "7b0e8a99-2d16-11ee-ae86-a08cfd743dba"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user@gmail.com\",\r\n    \"password\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/api/login",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "todo list",
+			"item": [
+				{
+					"name": "insert todo list",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "5f977584-2d25-11ee-9fc2-a08cfd743dba",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"my todo list\",\r\n    \"description\": \"my todo list description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/api/todo/todo-lists",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"todo",
+								"todo-lists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit todo list",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "68e423d7-2d18-11ee-9fc2-a08cfd743dba",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"my todo list-edited\",\r\n    \"description\": \"my todo list description-edited\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/api/todo/todo-lists/id/:todo-list-id",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"todo",
+								"todo-lists",
+								"id",
+								":todo-list-id"
+							],
+							"variable": [
+								{
+									"key": "todo-list-id",
+									"value": "b4c30ca4-2d1f-11ee-9f7b-a08cfd743dba"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get to do list detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "68e423d7-2d18-11ee-9fc2-a08cfd743dba",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9000/api/todo/todo-lists/id/:todo-list-id",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"todo",
+								"todo-lists",
+								"id",
+								":todo-list-id"
+							],
+							"variable": [
+								{
+									"key": "todo-list-id",
+									"value": "b4c30ca4-2d1f-11ee-9f7b-a08cfd743dba"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list of todo lists",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "5f977584-2d25-11ee-9fc2-a08cfd743dba",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9000/api/todo/todo-lists",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"todo",
+								"todo-lists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove todo list",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "68e423d7-2d18-11ee-9fc2-a08cfd743dba",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9000/api/todo/todo-lists/id/:todo-list-id",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"todo",
+								"todo-lists",
+								"id",
+								":todo-list-id"
+							],
+							"variable": [
+								{
+									"key": "todo-list-id",
+									"value": "b4c30ca4-2d1f-11ee-9f7b-a08cfd743dba"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "todo item",
+			"item": [
+				{
+					"name": "insert todo item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "5f977584-2d25-11ee-9fc2-a08cfd743dba",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"todo_list_id\": \"6a71a6d0-2d25-11ee-bfab-a08cfd743dba\",\r\n    \"title\": \"todo-item 1\",\r\n    \"priority\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/api/todo/todo-items",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"todo",
+								"todo-items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit todo item",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "68e423d7-2d18-11ee-9fc2-a08cfd743dba",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"todo_list_id\": \"6a71a6d0-2d25-11ee-bfab-a08cfd743dba\",\r\n    \"title\": \"todo-item 1 (edited)\",\r\n    \"priority\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/api/todo/todo-items/id/:todo-item-id",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"todo",
+								"todo-items",
+								"id",
+								":todo-item-id"
+							],
+							"variable": [
+								{
+									"key": "todo-item-id",
+									"value": "d3f7b2bb-2d23-11ee-a5a4-a08cfd743dba"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get to do item detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "68e423d7-2d18-11ee-9fc2-a08cfd743dba",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9000/api/todo/todo-items/id/:todo-item-id",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"todo",
+								"todo-items",
+								"id",
+								":todo-item-id"
+							],
+							"variable": [
+								{
+									"key": "todo-item-id",
+									"value": "d3f7b2bb-2d23-11ee-a5a4-a08cfd743dba"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list of todo items",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "5f977584-2d25-11ee-9fc2-a08cfd743dba",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9000/api/todo/todo-lists/id/:todo-list-id/todo-items",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"todo",
+								"todo-lists",
+								"id",
+								":todo-list-id",
+								"todo-items"
+							],
+							"variable": [
+								{
+									"key": "todo-list-id",
+									"value": "6a71a6d0-2d25-11ee-bfab-a08cfd743dba"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove todo list",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "68e423d7-2d18-11ee-9fc2-a08cfd743dba",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9000/api/todo/todo-items/id/:todo-item-id",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"todo",
+								"todo-items",
+								"id",
+								":todo-item-id"
+							],
+							"variable": [
+								{
+									"key": "todo-item-id",
+									"value": "d3f7b2bb-2d23-11ee-a5a4-a08cfd743dba"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
