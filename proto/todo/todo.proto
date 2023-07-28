@@ -21,23 +21,27 @@ message TodoList {
   string id = 1;
   string name = 2;
   string description = 3;
-  int32 status = 4;
+  string user_id = 4;
+  int32 status = 5;
 }
 message TodoItem {
   string id = 1;
   string todoListId = 2;
   string title = 3;
   int64 priority = 4;
-  int32 status = 5;
+  string user_id = 5;
+  int32 status = 6;
 }
 
 //request
 message IDRequest {
   string id = 1;
+  string user_id = 2;
 }
 message SkipLimitRequest {
-  int64 skip = 1;
-  int64 limit = 2;
+  string user_id = 1;
+  int64 skip = 2;
+  int64 limit = 3;
 }
 
 //response

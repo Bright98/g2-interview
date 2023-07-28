@@ -27,20 +27,20 @@ func (s GrpcServer) EditTodoList(ctx context.Context, in *pb.TodoList) (*pb.Erro
 	return &pb.ErrorResponse{Key: err.Key, Error: err.Error}, nil
 }
 func (s GrpcServer) RemoveTodoList(ctx context.Context, in *pb.IDRequest) (*pb.ErrorResponse, error) {
-	err := s.domain.RemoveTodoListService(in.GetId())
+	err := s.domain.RemoveTodoListService(in.GetId(), in.GetUserId())
 	return &pb.ErrorResponse{Key: err.Key, Error: err.Error}, nil
 }
 
 // use in api gateway
 func (s GrpcServer) GetTodoListByID(ctx context.Context, in *pb.IDRequest) (*pb.TodoListResponse, error) {
-	todoList, err := s.domain.GetTodoListByIDService(in.GetId())
+	todoList, err := s.domain.GetTodoListByIDService(in.GetId(), in.GetUserId())
 	return &pb.TodoListResponse{
 		Data:  domain.MapTodoListToGrpcTodoList(todoList),
 		Error: domain.MapDomainGrpcError(err),
 	}, nil
 }
 func (s GrpcServer) GetTodoListList(ctx context.Context, in *pb.SkipLimitRequest) (*pb.TodoListListResponse, error) {
-	todoLists, err := s.domain.GetTodoListListService(in.Skip, in.Limit)
+	todoLists, err := s.domain.GetTodoListListService(in.GetUserId(), in.GetSkip(), in.GetLimit())
 	var todoListsRes []*pb.TodoList
 	for _, todo := range todoLists {
 		todoListsRes = append(todoListsRes, domain.MapTodoListToGrpcTodoList(&todo))

@@ -34,6 +34,7 @@ func MapTodoListToGrpcTodoList(todoList *TodoLists) *pb.TodoList {
 	todoListRes.Id = todoList.Id
 	todoListRes.Name = todoList.Name
 	todoListRes.Description = todoList.Description
+	todoListRes.UserId = ""
 	todoListRes.Status = int32(todoList.Status)
 	return todoListRes
 }
@@ -46,6 +47,7 @@ func MapTodoItemToGrpcTodoItem(todoItem *TodoItems) *pb.TodoItem {
 	todoItemRes.TodoListId = todoItem.TodoListID
 	todoItemRes.Title = todoItem.Title
 	todoItemRes.Priority = todoItem.Priority
+	todoItemRes.UserId = ""
 	todoItemRes.Status = int32(todoItem.Status)
 	return todoItemRes
 }
